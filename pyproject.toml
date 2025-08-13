@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "langguard"
-version = "0.0.1"
+version = "0.0.0"
 description = "A Python library for language security"
 readme = "README.md"
 requires-python = ">=3.7"
 license = {file = "LICENSE"}
 authors = [
-    {name = "Your Name", email = "your.email@example.com"},
+    {name = "Andrew Przybilla", email = "andrewprzy@pm.me"},
 ]
 keywords = ["security", "language", "protection"]
 classifiers = [
@@ -27,9 +27,9 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/aprzy/langguard-python"
-Repository = "https://github.com/aprzy/langguard-python"
-Issues = "https://github.com/aprzy/langguard-python/issues"
+Homepage = "https://github.com/langguard/langguard-python"
+Repository = "https://github.com/langguard/langguard-python"
+Issues = "https://github.com/langguard/langguard-python/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
