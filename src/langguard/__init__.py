@@ -3,5 +3,6 @@
 __version__ = "0.0.1"
 
 from .core import hello, LangGuard
+from .agent import GuardAgent, GuardResponse
 
-__all__ = ["hello", "LangGuard", "__version__"]
+__all__ = ["hello", "LangGuard", "GuardAgent", "GuardResponse", "__version__"]
