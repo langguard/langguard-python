@@ -14,15 +14,15 @@ def set_llm(llm_provider: str = None):
 
 class OpenAILLM:
     """OpenAI LLM provider with native structured output support."""
-    def __init__(self, model: str = "gpt-4o-mini", api_key: str = None, temperature: float = 0):
+    def __init__(self, model: str = "gpt-4o-mini", api_key: Optional[str] = None, temperature: float = 0):
         self.model = os.getenv("GUARD_LLM_MODEL", model)
-        self.api_key = os.getenv("OPENAI_API_KEY", api_key)
+        self.api_key = os.getenv("GUARD_LLM_API_KEY", api_key)
         if not self.api_key:
-            raise ValueError("OpenAI API key required. Set OPENAI_API_KEY environment variable.")
+            raise ValueError("OpenAI API key required. Set GUARD_LLM_API_KEY environment variable.")
         self.temperature = float(os.getenv("LLM_TEMPERATURE", temperature))
         self.endpoint_url = "https://api.openai.com/v1/chat/completions"
 
-    def generate(self, prompt: str, temperature: float = None, json_schema: Optional[Dict[str, Any]] = None) -> str:
+    def generate(self, prompt: str, temperature: Optional[float] = None, json_schema: Optional[Dict[str, Any]] = None) -> str:
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.api_key}"

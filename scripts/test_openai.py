@@ -15,9 +15,9 @@ from langguard.agent import GuardAgent
 print("Testing GuardAgent with OpenAI (gpt-4o-mini)")
 print("="*60)
 
-if not os.getenv("OPENAI_API_KEY"):
-    print("ERROR: Please set OPENAI_API_KEY environment variable")
-    print("Example: export OPENAI_API_KEY='your-api-key-here'")
+if not os.getenv("GUARD_LLM_API_KEY"):
+    print("ERROR: Please set GUARD_LLM_API_KEY environment variable")
+    print("Example: export GUARD_LLM_API_KEY='your-api-key-here'")
     sys.exit(1)
 
 # Create agent instance

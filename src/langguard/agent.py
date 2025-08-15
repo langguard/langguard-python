@@ -1,7 +1,7 @@
 from langguard.models import set_llm
 import backoff
 import json
-from typing import Dict, TypedDict
+from typing import Dict, TypedDict, Optional
 
 class GuardResponse(TypedDict):
     prompt_pass: bool
@@ -12,7 +12,7 @@ class GuardAgent:
     def __init__(self, llm=None):
         self.llm = set_llm(llm)
 
-    def _llm_generate_with_retry(self, prompt: str, temperature: float = None, timeout: float = 30, json_schema: dict = None) -> str:
+    def _llm_generate_with_retry(self, prompt: str,timeout: float = 30, temperature: Optional[float] = None, json_schema: Optional[dict] = None) -> str:
 
         def _call():
             try:
