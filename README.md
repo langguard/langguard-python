@@ -8,7 +8,7 @@ LLM Agent as a library that acts as a security layer for LLM agent pipelines. Th
 
 ## Features
 
-- **GuardAgent**: Agent that contains default specification on what to mark safe. Specification may be overridden. By default, it will attempt to flag all data that contains instructions that LLM AI agents may consider instructions. The GuardAgent is intended to be placed in the data stream before any intended instructions exist. The GuardAgent is optimized for light-weight, affordable models to balance its effectiveness as a security control with cost. **v0.7** currently achieves 90% block rate on a hackaprompt sample using gpt-5-nano
+- **GuardAgent**: Agent that contains default specification on what to mark safe. Specification may be overridden. By default, it will attempt to flag all data that contains instructions that LLM AI agents may consider instructions. The GuardAgent is intended to be placed in the data stream before any intended instructions exist. The GuardAgent is optimized for light-weight, affordable models to balance its effectiveness as a security control with cost. **v0.7** currently achieves [90% block rate on a hackaprompt sample](https://github.com/langguard/langguard-trials) using gpt-5-nano
 
 ## Limitations
 
@@ -40,7 +40,7 @@ To use GuardAgent, you need:
 export GUARD_LLM_PROVIDER="openai"        # LLM provider to use
 export GUARD_LLM_API_KEY="your-api-key"   # Your OpenAI API key
 export GUARD_LLM_MODEL="gpt-5-nano"      # Model of choice
-export LLM_TEMPERATURE="1"              # Optional: Temperature 0-1 (default: 0.1)
+export LLM_TEMPERATURE="1"              # Optional: Temperature 0-1 (default: 1)
 ```
 
 Then in your code:
@@ -81,8 +81,8 @@ response = agent.screen("Your prompt here")
 |----------|-------------|----------|----------|
 | `GUARD_LLM_PROVIDER` | LLM provider (`"openai"` or `None`) | No | `None` (test mode) |
 | `GUARD_LLM_API_KEY` | API key for OpenAI | Yes (for OpenAI) | - |
-| `GUARD_LLM_MODEL` | Model to use | No | `gpt-4o-mini` |
-| `LLM_TEMPERATURE` | Temperature (0-1) | No | `0.1` |
+| `GUARD_LLM_MODEL` | Model to use | No | `gpt-5-nano` |
+| `LLM_TEMPERATURE` | Temperature (0-1) | No | `1` |
 
 **Note**: Currently, API keys and models can only be configured via environment variables, not passed directly to the constructor.
 
