@@ -7,7 +7,7 @@ name = "langguard"
 version = "0.2.0"
 description = "A Python library for language security"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.11"
 license = {file = "LICENSE"}
 authors = [
     {name = "Andrew Przybilla", email = "andrewprzy@pm.me"},
@@ -18,10 +18,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
 ]
