@@ -18,6 +18,70 @@ Install LangGuard using pip:
 pip install langguard
 ```
 
+## Configuration
+
+### Required Components
+
+To use GuardAgent, you need:
+1. **LLM Provider** - Currently supports `"openai"` or `None` (test mode)
+2. **API Key** - Required for OpenAI (via environment variable)
+3. **Prompt** - The text to screen (passed to `screen()` method)
+4. **Model** - Optional, defaults to `gpt-4o-mini`
+
+### Setup Methods
+
+#### Method 1: Environment Variables (Recommended)
+
+```bash
+export GUARD_LLM_PROVIDER="openai"        # LLM provider to use
+export GUARD_LLM_API_KEY="your-api-key"   # Your OpenAI API key
+export GUARD_LLM_MODEL="gpt-4o-mini"      # Optional: OpenAI model (default: gpt-4o-mini)
+export LLM_TEMPERATURE="0.1"              # Optional: Temperature 0-1 (default: 0.1)
+```
+
+Then in your code:
+```python
+from langguard import GuardAgent
+
+agent = GuardAgent()  # Automatically uses environment variables
+response = agent.screen("Your prompt here")
+```
+
+#### Method 2: Partial Configuration
+
+```bash
+export GUARD_LLM_API_KEY="your-api-key"   # API key must be in environment
+```
+
+```python
+from langguard import GuardAgent
+
+agent = GuardAgent(llm="openai")  # Specify provider in code
+response = agent.screen("Your prompt here")
+```
+
+#### Method 3: Test Mode (No API Required)
+
+```python
+from langguard import GuardAgent
+
+# No provider specified = test mode
+agent = GuardAgent()  # Uses TestLLM, no API needed
+response = agent.screen("Your prompt here")
+# Always returns {"safe": false, "reason": "Test mode - always fails for safety"}
+```
+
+### Environment Variables Reference
+
+| Variable | Description | Required | Default |
+|----------|-------------|----------|----------|
+| `GUARD_LLM_PROVIDER` | LLM provider (`"openai"` or `None`) | No | `None` (test mode) |
+| `GUARD_LLM_API_KEY` | API key for OpenAI | Yes (for OpenAI) | - |
+| `GUARD_LLM_MODEL` | Model to use | No | `gpt-4o-mini` |
+| `LLM_TEMPERATURE` | Temperature (0-1) | No | `0.1` |
+
+**Note**: Currently, API keys and models can only be configured via environment variables, not passed directly to the constructor.
+
 ## Quick Start
 
 ### Basic Usage - Plug and Play
@@ -87,35 +151,8 @@ if is_safe:
     pass
 ```
 
-## 🔧 Configuration
 
-### Environment Variables
-
-LangGuard can be configured using environment variables:
-
-```bash
-# LLM Provider Configuration
-export GUARD_LLM_PROVIDER="openai"        # Options: "openai", or None for test mode
-export GUARD_LLM_MODEL="gpt-4o-mini"      # OpenAI model to use
-export GUARD_LLM_API_KEY="your-api-key"   # Your OpenAI API key
-export LLM_TEMPERATURE="0.1"              # Temperature for LLM generation (0-1)
-```
-
-### Programmatic Configuration
-
-```python
-from langguard import GuardAgent
-
-# Configure via code
-agent = GuardAgent(
-    llm="openai",  # or None for test mode
-    config={
-        "default_specification": "Your default security rules here"
-    }
-)
-```
-
-## 🛠️ Advanced Usage
+## Advanced Usage
 
 ### Advanced Usage
 
@@ -167,7 +204,7 @@ GuardAgent comes with built-in protection against:
 - **Malicious Generation**: Phishing emails, malware, or exploit code
 - **Prompt Manipulation**: Instructions to ignore previous rules or reveal system prompts
 
-## 🧪 Testing
+## Testing
 
 The library includes comprehensive test coverage for various security scenarios:
 
@@ -192,7 +229,7 @@ LangGuard can detect and prevent:
 - **Medical Advice**: Filters out specific medical diagnosis requests
 - **Harmful Content**: Blocks requests for dangerous information
 
-## 🏗️ Architecture
+## Architecture
 
 LangGuard follows a modular architecture:
 
@@ -210,7 +247,7 @@ langguard/
 - **LLM Providers**: Pluggable LLM backends (OpenAI with structured output support)
 - **GuardResponse**: Typed response structure with pass/fail status and reasoning
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
@@ -220,11 +257,11 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🔗 Links
+## Links
 
 - [GitHub Repository](https://github.com/langguard/langguard-python)
 - [Issue Tracker](https://github.com/langguard/langguard-python/issues)
