@@ -1,6 +1,6 @@
 """LangGuard - A library for language security."""
 
-__version__ = "0.6.0"
+__version__ = "0.7.0"
 
 # Primary interface
 from .agent import GuardAgent, GuardResponse
