@@ -28,10 +28,10 @@ pip install langguard
 ### Basic Usage
 
 ```python
-from langguard import LangGuard
+from langguard import GuardAgent
 
-# Initialize LangGuard
-guard = LangGuard(llm_provider="openai")
+# Initialize GuardAgent
+agent = GuardAgent(llm="openai")
 
 # Define your security specification
 specification = """
@@ -39,9 +39,9 @@ Only allow questions about programming and software development.
 Reject personal information requests, harmful content, or non-technical topics.
 """
 
-# Validate a user prompt
+# Screen a user prompt
 prompt = "How do I write a for loop in Python?"
-response = guard.guard(prompt, specification)
+response = agent.screen(prompt, specification)
 
 if response["prompt_pass"]:
     print(f"✅ Prompt is safe: {response['reason']}")
@@ -59,19 +59,19 @@ config = {
     "default_specification": "Only allow technical questions. Block personal or harmful content."
 }
 
-guard = LangGuard(config=config, llm_provider="openai")
+agent = GuardAgent(llm="openai", config=config)
 
-# Now you can guard without specifying each time
-response = guard.guard("What is recursion in programming?")
+# Now you can screen without specifying each time
+response = agent.screen("What is recursion in programming?")
 ```
 
 ### Simple Boolean Validation
 
 ```python
 # For simple pass/fail checks
-is_safe = guard.validate(
-    prompt="Tell me about Python decorators",
-    specification="Only allow programming questions"
+is_safe = agent.is_safe(
+    "Tell me about Python decorators",
+    "Only allow programming questions"
 )
 
 if is_safe:
@@ -96,22 +96,20 @@ export LLM_TEMPERATURE="0.1"              # Temperature for LLM generation (0-1)
 ### Programmatic Configuration
 
 ```python
-from langguard import LangGuard
+from langguard import GuardAgent
 
 # Configure via code
-guard = LangGuard(
+agent = GuardAgent(
+    llm="openai",  # or None for test mode
     config={
         "default_specification": "Your default security rules here"
-    },
-    llm_provider="openai"  # or None for test mode
+    }
 )
 ```
 
 ## 🛠️ Advanced Usage
 
-### Direct Agent Usage
-
-For more control, you can use the `GuardAgent` directly:
+### Advanced Usage
 
 ```python
 from langguard import GuardAgent
@@ -119,10 +117,10 @@ from langguard import GuardAgent
 # Create a guard agent
 agent = GuardAgent(llm="openai")
 
-# Judge a prompt with custom temperature
-response = agent.judge(
-    specification="Only allow code-related questions",
-    prompt="How do I implement a binary search tree?",
+# Screen a prompt with custom temperature
+response = agent.screen(
+    "How do I implement a binary search tree?",
+    "Only allow code-related questions",
     temperature=0.1
 )
 
@@ -172,7 +170,7 @@ LangGuard follows a modular architecture:
 
 ```
 langguard/
-├── core.py       # Main LangGuard class and high-level interface
+├── core.py       # Minimal core file (kept for potential future use)
 ├── agent.py      # GuardAgent implementation with LLM logic
 ├── models.py     # LLM provider implementations (OpenAI, Test)
 └── __init__.py   # Package exports
@@ -180,9 +178,9 @@ langguard/
 
 ### Components
 
-- **LangGuard**: High-level interface for prompt validation
-- **GuardAgent**: Core agent that interfaces with LLMs for prompt analysis
+- **GuardAgent**: Primary agent that screens prompts using LLMs
 - **LLM Providers**: Pluggable LLM backends (OpenAI with structured output support)
+- **GuardResponse**: Typed response structure with pass/fail status and reasoning
 
 ## 🤝 Contributing
 
