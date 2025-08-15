@@ -8,7 +8,7 @@ LLM Agent as a library that acts as a security layer for LLM agent pipelines. Th
 
 ## Features
 
-- **GuardAgent**: Agent that contains default specification on what to mark safe. Specification may be overridden. By default, it will attempt to flag all data that contains instructions that LLM AI agents may consider instructions. The GuardAgent is intended to be placed in the data stream before any intended instructions exist. The GuardAgent is optimized for light-weight, affordable models to balance its effectiveness as a security control with cost. **v0.7** currently achieves [90% block rate on a hackaprompt sample](https://github.com/langguard/langguard-trials) using gpt-5-nano
+- **GuardAgent**: Agent that contains default specification on what to mark safe. Specification may be overridden. By default, it will attempt to flag all data that contains instructions that LLM AI agents may consider instructions. The GuardAgent is intended to be placed in the data stream before any intended instructions exist. The GuardAgent is optimized for light-weight, affordable models to balance its effectiveness as a security control with cost. **v0.7** currently achieves [90% block rate on a hackaprompt sample](https://github.com/langguard/trials) using gpt-5-nano
 
 ## Limitations
 
