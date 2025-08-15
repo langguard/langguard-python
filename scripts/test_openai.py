@@ -109,28 +109,28 @@ for i, test in enumerate(test_cases, 1):
     print(f"Prompt: {test['prompt'][:80]}...")
     
     try:
-        result = agent.judge(
-            specification=test['specification'],
-            prompt=test['prompt'],
+        result = agent.screen(
+            test['prompt'],
+            test['specification'],
             temperature=0.1
         )
         
         # Validate structure
         assert isinstance(result, dict), "Result should be a dictionary"
-        assert "prompt_pass" in result, "Missing 'prompt_pass' key"
+        assert "safe" in result, "Missing 'safe' key"
         assert "reason" in result, "Missing 'reason' key"
         assert len(result) == 2, f"Expected exactly 2 keys, got {len(result)}"
-        assert isinstance(result["prompt_pass"], bool), "prompt_pass should be boolean"
+        assert isinstance(result["safe"], bool), "safe should be boolean"
         assert isinstance(result["reason"], str), "reason should be string"
         
         # Check result
-        decision = "PASS" if result["prompt_pass"] else "FAIL"
+        decision = "PASS" if result["safe"] else "FAIL"
         expected = "PASS" if test["expected"] else "FAIL"
         
         print(f"\nResult: {decision}")
         print(f"Reason: {result['reason']}")
         
-        if result["prompt_pass"] == test["expected"]:
+        if result["safe"] == test["expected"]:
             print(f"✅ Correct! (Expected: {expected})")
             passed += 1
         else:

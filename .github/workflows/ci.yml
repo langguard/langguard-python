@@ -104,7 +104,7 @@ jobs:
         from langguard import GuardAgent
         agent = GuardAgent()  # Should use TestLLM by default
         result = agent.screen('test prompt', 'test spec')
-        assert 'prompt_pass' in result
+        assert 'safe' in result
         assert 'reason' in result
         print('Basic functionality test passed')
         "

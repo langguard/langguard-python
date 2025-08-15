@@ -5,7 +5,7 @@ from typing import TypedDict, Optional
 
 
 class GuardResponse(TypedDict):
-    prompt_pass: bool
+    safe: bool
     reason: str
 
 
@@ -62,12 +62,12 @@ class GuardAgent:
             GuardResponse with 'prompt_pass' (bool) and 'reason' (str)
         """
         if not prompt:
-            return {"prompt_pass": False, "reason": "No prompt provided"}
+            return {"safe": False, "reason": "No prompt provided"}
 
         spec_to_use = specification or self.default_specification
         if not spec_to_use:
             return {
-                "prompt_pass": False,
+                "safe": False,
                 "reason": "No specification provided and no default specification configured",
             }
 
@@ -75,10 +75,10 @@ class GuardAgent:
         output_schema = {
             "type": "object",
             "properties": {
-                "prompt_pass": {"type": "boolean"},
+                "safe": {"type": "boolean"},
                 "reason": {"type": "string"},
             },
-            "required": ["prompt_pass", "reason"],
+            "required": ["safe", "reason"],
             "additionalProperties": False,
         }
 
@@ -100,21 +100,21 @@ Determine if the prompt is safe and complies with the specification."""
 
             # With structured outputs, we can trust the schema is correct
             # Just validate the types as a safety check
-            if isinstance(parsed_response.get("prompt_pass"), bool) and isinstance(
+            if isinstance(parsed_response.get("safe"), bool) and isinstance(
                 parsed_response.get("reason"), str
             ):
                 return parsed_response
             else:
                 return {
-                    "prompt_pass": False,
+                    "safe": False,
                     "reason": "Invalid response types from LLM",
                 }
 
         except json.JSONDecodeError:
-            return {"prompt_pass": False, "reason": "LLM returned invalid JSON"}
+            return {"safe": False, "reason": "LLM returned invalid JSON"}
         except Exception as e:
             return {
-                "prompt_pass": False,
+                "safe": False,
                 "reason": f"Error processing LLM response: {str(e)}",
             }
 
@@ -130,4 +130,4 @@ Determine if the prompt is safe and complies with the specification."""
             True if prompt passes, False otherwise
         """
         result = self.screen(prompt, specification)
-        return result["prompt_pass"]
+        return result["safe"]

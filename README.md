@@ -8,12 +8,7 @@
 
 ## 🚀 Features
 
-- **🔍 Input Screening**: Validate prompts against custom security specifications
-- **🤖 LLM-Based Analysis**: Uses language models to intelligently assess prompt safety
-- **🔌 Provider Flexibility**: Support for OpenAI and custom LLM providers
-- **📋 Structured Responses**: Returns typed responses with clear pass/fail status and reasoning
-- **🔄 Retry Logic**: Built-in retry mechanism with exponential backoff for reliability
-- **⚙️ Configurable**: Easy configuration through environment variables or code
+- **🛡️🤖 GuardAgent**: Agent that serves as a circuit-breaker against prompt injection attacked.
 
 ## 📦 Installation
 
@@ -31,7 +26,7 @@ pip install langguard
 from langguard import GuardAgent
 
 # Initialize GuardAgent
-agent = GuardAgent(llm="openai")
+guard = GuardAgent(llm="openai")
 
 # Define your security specification
 specification = """
@@ -41,9 +36,9 @@ Reject personal information requests, harmful content, or non-technical topics.
 
 # Screen a user prompt
 prompt = "How do I write a for loop in Python?"
-response = agent.screen(prompt, specification)
+response = guard.screen(prompt, specification)
 
-if response["prompt_pass"]:
+if response["safe"]:
     print(f"✅ Prompt is safe: {response['reason']}")
     # Proceed with your LLM agent pipeline
 else:
@@ -124,7 +119,7 @@ response = agent.screen(
     temperature=0.1
 )
 
-print(f"Decision: {'PASS' if response['prompt_pass'] else 'FAIL'}")
+print(f"Decision: {'PASS' if response['safe'] else 'FAIL'}")
 print(f"Reasoning: {response['reason']}")
 ```
 
@@ -134,8 +129,8 @@ LangGuard returns a `GuardResponse` dictionary with:
 
 ```python
 {
-    "prompt_pass": bool,  # True if prompt is safe, False otherwise
-    "reason": str        # Explanation of the decision
+    "safe": bool,    # True if prompt is safe, False otherwise
+    "reason": str    # Explanation of the decision
 }
 ```
 

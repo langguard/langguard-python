@@ -30,29 +30,29 @@ class TestGuardAgent(unittest.TestCase):
     def test_screen_without_prompt(self):
         """Test screen method without prompt."""
         result = self.agent.screen("", "Some specification")
-        self.assertFalse(result["prompt_pass"])
+        self.assertFalse(result["safe"])
         self.assertEqual(result["reason"], "No prompt provided")
 
     def test_screen_without_specification(self):
         """Test screen method without specification."""
         result = self.agent.screen("Test prompt")
-        self.assertFalse(result["prompt_pass"])
+        self.assertFalse(result["safe"])
         self.assertIn("No specification provided", result["reason"])
 
     def test_screen_with_default_specification(self):
         """Test screen method uses default specification."""
         result = self.agent_with_config.screen("How do I write a for loop?")
         # With TestLLM, this should return a test response
-        self.assertIn("prompt_pass", result)
+        self.assertIn("safe", result)
         self.assertIn("reason", result)
 
     def test_screen_returns_guard_response(self):
         """Test screen returns proper GuardResponse structure."""
         result = self.agent.screen("Test prompt", "Test specification")
         self.assertIsInstance(result, dict)
-        self.assertIn("prompt_pass", result)
+        self.assertIn("safe", result)
         self.assertIn("reason", result)
-        self.assertIsInstance(result["prompt_pass"], bool)
+        self.assertIsInstance(result["safe"], bool)
         self.assertIsInstance(result["reason"], str)
 
     def test_is_safe_returns_boolean(self):

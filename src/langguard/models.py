@@ -96,7 +96,7 @@ class TestLLM:
         # If json_schema is provided, return a test JSON response
         if json_schema:
             # For testing, always return a safe/failed response
-            return '{"prompt_pass": false, "reason": "Test mode - always fails for safety"}'
+            return '{"safe": false, "reason": "Test mode - always fails for safety"}'
 
         # Create a response that includes the original prompt
         response = f"[TEST RESPONSE] Echo of prompt: '{prompt}'"
