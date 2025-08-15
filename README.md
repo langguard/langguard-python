@@ -4,7 +4,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PyPI Version](https://img.shields.io/pypi/v/langguard)](https://pypi.org/project/langguard/)
 
-LLM Agent as a library that acts as a security layer for LLM agent pipelines. The primary goal is to serve a circuit breaker for data entering pipelines. 
+LangGuard is a Python security library that protects AI agent workflows from malicious input. Think of it as a security checkpoint that screens user prompts before they reach your AI systems.
+
+Modern AI applications often accept user input and pass it directly to language models or AI agents. This creates security risks - users can inject malicious instructions, attempt to manipulate the AI's behavior, or try to extract sensitive information. LangGuard acts as a protective barrier, analyzing incoming prompts and blocking potentially harmful content before it reaches your AI pipeline.
+
+The library serves as a "circuit breaker" - when suspicious input is detected, it stops the request from proceeding, protecting both your AI system and users from potential security threats like prompt injection attacks, jailbreaking attempts, and data extraction efforts. 
 
 ## Features
 
