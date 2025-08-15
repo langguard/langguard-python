@@ -109,9 +109,11 @@ for i, test in enumerate(test_cases, 1):
     print(f"Prompt: {test['prompt'][:80]}...")
     
     try:
+        # Use override=True for tests since we want exact specification matching
         result = agent.screen(
             test['prompt'],
             test['specification'],
+            override=True,
             temperature=0.1
         )
         

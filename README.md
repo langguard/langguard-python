@@ -6,11 +6,11 @@
 
 **LangGuard** is a Python library that acts as a security layer for LLM (Large Language Model) agent pipelines. It screens and validates language inputs before they reach your AI agents, helping prevent prompt injection, jailbreaking attempts, and ensuring compliance with your security specifications.
 
-## 🚀 Features
+## Features
 
-- **🛡️🤖 GuardAgent**: Agent that serves as a circuit-breaker against prompt injection attacked.
+- **🤖🛡️ GuardAgent**: Agent that serves as a circuit-breaker against prompt injection, jailbreaking, and data lifting attacks.
 
-## 📦 Installation
+## Installation
 
 Install LangGuard using pip:
 
@@ -18,46 +18,59 @@ Install LangGuard using pip:
 pip install langguard
 ```
 
-## 🏃 Quick Start
+## Quick Start
 
-### Basic Usage
+### Basic Usage - Plug and Play
 
 ```python
 from langguard import GuardAgent
 
-# Initialize GuardAgent
+# Initialize GuardAgent with built-in security rules
 guard = GuardAgent(llm="openai")
 
-# Define your security specification
-specification = """
-Only allow questions about programming and software development.
-Reject personal information requests, harmful content, or non-technical topics.
-"""
-
-# Screen a user prompt
+# Screen a user prompt with default protection
 prompt = "How do I write a for loop in Python?"
-response = guard.screen(prompt, specification)
+response = guard.screen(prompt)
 
 if response["safe"]:
-    print(f"✅ Prompt is safe: {response['reason']}")
+    print(f"Prompt is safe: {response['reason']}")
     # Proceed with your LLM agent pipeline
 else:
-    print(f"❌ Prompt blocked: {response['reason']}")
+    print(f"Prompt blocked: {response['reason']}")
     # Handle the blocked prompt
 ```
 
-### Using Default Specification
+The default specification blocks:
+- Jailbreak attempts and prompt injections
+- Requests for harmful or illegal content
+- SQL/command injection attempts
+- Personal information requests
+- Malicious content generation
+- System information extraction
+
+### Adding Custom Rules
 
 ```python
-# Configure with a default specification
-config = {
-    "default_specification": "Only allow technical questions. Block personal or harmful content."
-}
+# Add additional rules to the default specification
+guard = GuardAgent(llm="openai")
 
-agent = GuardAgent(llm="openai", config=config)
+# Add domain-specific rules while keeping default protection
+response = guard.screen(
+    "Tell me about Python decorators",
+    specification="Only allow Python and JavaScript questions"
+)
+# This adds your rules to the default security rules
+```
 
-# Now you can screen without specifying each time
-response = agent.screen("What is recursion in programming?")
+### Overriding Default Rules
+
+```python
+# Completely replace default rules with custom specification
+response = guard.screen(
+    "What is a SQL injection?",
+    specification="Only allow cybersecurity educational content",
+    override=True  # This replaces ALL default rules
+)
 ```
 
 ### Simple Boolean Validation
@@ -112,15 +125,24 @@ from langguard import GuardAgent
 # Create a guard agent
 agent = GuardAgent(llm="openai")
 
-# Screen a prompt with custom temperature
-response = agent.screen(
+# Use the simple boolean check
+if agent.is_safe("DROP TABLE users;"):
+    print("Prompt is safe")
+else:
+    print("Prompt blocked")
+
+# With custom rules added to defaults
+is_safe = agent.is_safe(
     "How do I implement a binary search tree?",
-    "Only allow code-related questions",
-    temperature=0.1
+    specification="Must be about data structures"
 )
 
-print(f"Decision: {'PASS' if response['safe'] else 'FAIL'}")
-print(f"Reasoning: {response['reason']}")
+# With complete rule override
+is_safe = agent.is_safe(
+    "What's the recipe for chocolate cake?",
+    specification="Only allow cooking questions",
+    override=True
+)
 ```
 
 ### Response Structure
@@ -133,6 +155,17 @@ LangGuard returns a `GuardResponse` dictionary with:
     "reason": str    # Explanation of the decision
 }
 ```
+
+### Default Protection
+
+GuardAgent comes with built-in protection against:
+- **Jailbreak Attempts**: Prompts trying to bypass safety guidelines
+- **Injection Attacks**: SQL, command, and code injection attempts
+- **Data Extraction**: Attempts to extract system information or credentials
+- **Harmful Content**: Requests for illegal, unethical, or dangerous content
+- **Personal Information**: Requests for SSN, passwords, or private data
+- **Malicious Generation**: Phishing emails, malware, or exploit code
+- **Prompt Manipulation**: Instructions to ignore previous rules or reveal system prompts
 
 ## 🧪 Testing
 
