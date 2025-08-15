@@ -4,11 +4,15 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PyPI Version](https://img.shields.io/pypi/v/langguard)](https://pypi.org/project/langguard/)
 
-**LangGuard** is a Python library that acts as a security layer for LLM (Large Language Model) agent pipelines. It screens and validates language inputs before they reach your AI agents, helping prevent prompt injection, jailbreaking attempts, and ensuring compliance with your security specifications.
+LLM Agent as a library that acts as a security layer for LLM agent pipelines. The primary goal is to serve a circuit breaker for data entering pipelines. 
 
 ## Features
 
-- **🤖🛡️ GuardAgent**: Agent that serves as a circuit-breaker against prompt injection, jailbreaking, and data lifting attacks.
+- **GuardAgent**: Agent that contains default specification on what to mark safe. Specification may be overridden. By default, it will attempt to flag all data that contains instructions that LLM AI agents may consider instructions. The GuardAgent is intended to be placed in the data stream before any intended instructions exist. The GuardAgent is optimized for light-weight, affordable models to balance its effectiveness as a security control with cost. **v0.7** currently achieves 90% block rate on a hackaprompt sample using gpt-5-nano
+
+## Limitations
+
+Currently only supports OpenAI as an LLM provider. Adapters for other providers wanted! Please contribute. **Note:** The provider needs to offer structured outputs to work with the GuardAgent properly
 
 ## Installation
 
@@ -26,7 +30,7 @@ To use GuardAgent, you need:
 1. **LLM Provider** - Currently supports `"openai"` or `None` (test mode)
 2. **API Key** - Required for OpenAI (via environment variable)
 3. **Prompt** - The text to screen (passed to `screen()` method)
-4. **Model** - Optional, defaults to `gpt-4o-mini`
+4. **Model** - A small model like gpt-5-nano is recommended for cost`
 
 ### Setup Methods
 
@@ -35,8 +39,8 @@ To use GuardAgent, you need:
 ```bash
 export GUARD_LLM_PROVIDER="openai"        # LLM provider to use
 export GUARD_LLM_API_KEY="your-api-key"   # Your OpenAI API key
-export GUARD_LLM_MODEL="gpt-4o-mini"      # Optional: OpenAI model (default: gpt-4o-mini)
-export LLM_TEMPERATURE="0.1"              # Optional: Temperature 0-1 (default: 0.1)
+export GUARD_LLM_MODEL="gpt-5-nano"      # Model of choice
+export LLM_TEMPERATURE="1"              # Optional: Temperature 0-1 (default: 0.1)
 ```
 
 Then in your code:
@@ -104,13 +108,17 @@ else:
     # Handle the blocked prompt
 ```
 
-The default specification blocks:
-- Jailbreak attempts and prompt injections
-- Requests for harmful or illegal content
-- SQL/command injection attempts
-- Personal information requests
-- Malicious content generation
-- System information extraction
+
+### Response Structure
+
+LangGuard returns a `GuardResponse` dictionary with:
+
+```python
+{
+    "safe": bool,    # True if prompt is safe, False otherwise
+    "reason": str    # Explanation of the decision
+}
+```
 
 ### Adding Custom Rules
 
@@ -182,27 +190,6 @@ is_safe = agent.is_safe(
 )
 ```
 
-### Response Structure
-
-LangGuard returns a `GuardResponse` dictionary with:
-
-```python
-{
-    "safe": bool,    # True if prompt is safe, False otherwise
-    "reason": str    # Explanation of the decision
-}
-```
-
-### Default Protection
-
-GuardAgent comes with built-in protection against:
-- **Jailbreak Attempts**: Prompts trying to bypass safety guidelines
-- **Injection Attacks**: SQL, command, and code injection attempts
-- **Data Extraction**: Attempts to extract system information or credentials
-- **Harmful Content**: Requests for illegal, unethical, or dangerous content
-- **Personal Information**: Requests for SSN, passwords, or private data
-- **Malicious Generation**: Phishing emails, malware, or exploit code
-- **Prompt Manipulation**: Instructions to ignore previous rules or reveal system prompts
 
 ## Testing
 
