@@ -12,6 +12,9 @@ license = {file = "LICENSE"}
 authors = [
     {name = "Andrew Jon Przybilla", email = "andrewprzy@pm.me"},
 ]
+maintainers = [
+    { name = "Andrew Jon Przybilla", email = "andrewprzy@pm.me" }
+]
 keywords = ["security", "language", "protection"]
 classifiers = [
     "Development Status :: 3 - Alpha",
